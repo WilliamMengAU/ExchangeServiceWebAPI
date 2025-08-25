@@ -1,0 +1,6 @@
+@ExchangeServiceWebAPI_HostAddress = http://localhost:5067
+
+GET {{ExchangeServiceWebAPI_HostAddress}}/ExchangeService/
+Accept: application/json
+
+###
