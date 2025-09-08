@@ -14,12 +14,12 @@ Document reference to https://www.exchangerate-api.com/docs/free
 4. If API rate limiting (HTTP 429) occurs, the next fetch will wait for 20 minutes before retrying. The next retry time is stored in the cache file.
 
 ## Improvements ideas.
-1. Add retry policy when call the external API. Such as use Polly.
+1. Add retry policy when calling the external API. Such as using Polly.
 2. Add more unit tests and integration tests.
 3. Move cache to Database or Redis for System Extensibility.
 4. Add authentication and authorization.
 5. Add more logging and monitoring.
-6. Implement a health check (status) API for system monitor.
+6. Implement a health check (status) API for system monitors.
 
 ## How to run
 Download the project, and run it in Visual Studio. It will open a swagger window in browser. Then you can put some test data.
