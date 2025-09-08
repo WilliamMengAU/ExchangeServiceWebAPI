@@ -5,16 +5,20 @@ namespace ExchangeServiceWebAPI.Models
 {
     public class ExchangeRatesResponse
     {
-        public string result { get; set; } = string.Empty;
+        [JsonPropertyName("result")]
+        public string Result { get; set; } = string.Empty;
 
         [JsonIgnore]
-        public DateTime TimeNextUpdateUtc => DateTime.Parse(time_next_update_utc);
+        public DateTime TimeNextUpdateUtc => DateTime.Parse(TimeNextUpdateUtcStr);
 
-        public string time_next_update_utc { get; set; } = string.Empty;
+        [JsonPropertyName("time_next_update_utc")]
+        public string TimeNextUpdateUtcStr { get; set; } = string.Empty;
 
-        public string base_code { get; set; } = string.Empty;
+        [JsonPropertyName("base_code")] 
+        public string BaseCurrencyCode { get; set; } = string.Empty;
 
-        public ConcurrentDictionary<string, decimal> rates { get; set; } = new();
+        [JsonPropertyName("rates")]
+        public ConcurrentDictionary<string, decimal> Rates { get; set; } = new();
 
         public DateTime? TimeCanRetryUtc { get; set; }
     }

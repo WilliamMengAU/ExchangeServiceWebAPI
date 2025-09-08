@@ -3,34 +3,41 @@ using ExchangeServiceWebAPI.Models;
 
 namespace ExchangeServiceWebAPI.Utils
 {
-    public static class CacheExchangeRate
+    public class CacheExchangeRate(ILogger<CacheExchangeRate> logger) : ICacheExchangeRate
     {
-        private const string CacheFile = "www.exchangerate-api.com docs free_cache.json";
+        private const string CacheFile = "exchange_cache.json";
+        private readonly object _lock = new();
 
-        private static ExchangeRatesResponse? _cachedRates;
-        public static ExchangeRatesResponse? CachedRates => _cachedRates?? LoadCache();
+        private ExchangeRatesResponse? _cachedRates;
+        public ExchangeRatesResponse? CachedRates => _cachedRates ?? LoadCache();
 
-        static CacheExchangeRate()
-        {
-            _cachedRates = LoadCache();
-        }
-
-        public static void SaveCache(ExchangeRatesResponse? rates)
+        public void SaveCache(ExchangeRatesResponse? rates)
         {
             _cachedRates = rates;
             var jsonStr = JsonSerializer.Serialize(rates, new JsonSerializerOptions { WriteIndented = true });
-            File.WriteAllText(CacheFile, jsonStr);
+
+            lock (_lock)
+            {
+                File.WriteAllText(CacheFile, jsonStr);
+            }
+
+            logger.LogInformation("Cache saved.");
         }
 
-        public static bool IsCacheValid()
+        public bool IsCacheValid()
         {
             if (CachedRates == null) return false;
             return DateTime.UtcNow < CachedRates.TimeNextUpdateUtc;
         }
 
-        private static ExchangeRatesResponse? LoadCache()
+        private ExchangeRatesResponse? LoadCache()
         {
-            if (!File.Exists(CacheFile)) return null;
+            if (!File.Exists(CacheFile))
+            {
+                logger.LogWarning("Cache file does not exist.");
+                return null;
+            }
+
             var jsonStr = File.ReadAllText(CacheFile);
 
             _cachedRates = JsonSerializer.Deserialize<ExchangeRatesResponse>(jsonStr);

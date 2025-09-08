@@ -1,5 +1,6 @@
 
 using ExchangeServiceWebAPI.Services;
+using ExchangeServiceWebAPI.Utils;
 
 namespace ExchangeServiceWebAPI
 {
@@ -11,6 +12,7 @@ namespace ExchangeServiceWebAPI
 
             // Add services to the container.
             builder.Services.AddHttpClient<IExchangeRateService, ExchangeRateService>();
+            builder.Services.AddSingleton<ICacheExchangeRate, CacheExchangeRate>();
             builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
 
             builder.Services.AddControllers();
@@ -30,7 +32,6 @@ namespace ExchangeServiceWebAPI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
